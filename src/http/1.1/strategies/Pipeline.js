@@ -124,7 +124,9 @@ class Pipeline {
 					if ( !pipelinedRequest ) return;
 
 					try{
-						pipelinedRequest.request.response.end();
+						pipelinedRequest.request.response.cork(() => {
+							pipelinedRequest.request.response.end();
+						});
 					}catch (err){
 
 					}
@@ -435,7 +437,10 @@ class Pipeline {
 		pipelinedRequest.headers = headers;
 
 		try{
-			writeHeaders(pipelinedRequest.request.response, headers);
+			const uwsResponse = pipelinedRequest.request.response;
+			uwsResponse.cork(() => {
+				writeHeaders(uwsResponse, headers, true);
+			});
 		}catch (err){
 			// Nothing more to do, the response have been aborted.
 		}
@@ -486,7 +491,9 @@ class Pipeline {
 
 			if (response) {
 				try{
-					response.end();
+					response.cork(() => {
+						response.end();
+					});
 				}catch(err){
 					// Nothing more to do, the response have been aborted.
 				}
