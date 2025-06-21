@@ -9,6 +9,7 @@
     "websocket"
   ],
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "mocha tests/mocha/**/*.js"
   },
