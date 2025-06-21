@@ -117,12 +117,24 @@ export interface UWSProxyCallbacks {
 	error?: UWSProxyErrorHandler;
 }
 
+// Backpressure configuration
+export interface UWSProxyBackpressureOpts {
+	/** Max number of stacked buffers under backpressure @default 4096 */
+	maxStackedBuffers?: number;
+}
+
 // UWSProxy configuration options
 export interface UWSProxyOpts {
 	/** Timeout in MS before an attempt to reach the proxied server will abort @default 300000 */
 	timeout?: number;
 	/** Collection of optional callbacks */
 	on?: UWSProxyCallbacks;
+	/** Routes configuration @default { any: '/*' } */
+	routes?: Record<string, string>;
+	/** Additional headers to add to proxied requests @default {} */
+	headers?: Record<string, string | string[]>;
+	/** Backpressure configuration */
+	backpressure?: UWSProxyBackpressureOpts;
 }
 
 // Main UWSProxy class
@@ -168,6 +180,11 @@ export declare class UWSProxy {
 	 * @returns HTTP configuration
 	 */
 	http(): UWSProxyHTTPConfig;
+
+	/**
+	 * Start the proxy server
+	 */
+	start(): void;
 }
 
 // Main module exports
